@@ -1,0 +1,48 @@
+version: '3.7'
+
+networks:
+    laravel:
+
+services:
+    nginx_ionic:
+        image: nginx:stable-alpine
+        container_name: nginx_ionic
+        ports: 
+            - "8080:81"
+        volumes: 
+            - ./src:/var/www
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+            - mysql_ionic
+        networks:
+            - laravel
+    mysql_ionic:
+        image: mysql:5.7.22
+        container_name: mysql_ionic
+        restart: unless-stopped
+        tty: true
+        ports: 
+            - "3306:3306"
+        environment: 
+            MYSQL_DATABASE: ionic
+            MYSQL_USER: ionic
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: secret
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes: 
+            - ./database:/var/lib/mysql    
+        networks:
+            - laravel
+    php:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        container_name: php_ionic
+        volumes: 
+            - ./src:/var/www/
+        ports: 
+            - "9000:9000"
+        networks:
+            - laravel
