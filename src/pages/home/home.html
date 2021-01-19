@@ -1,14 +1,18 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="secondary">
     <ion-title>
-      Ionic Blank
+      Home
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <button ion-button (click)="redirect()">Create</button>
+    <div *ngIf="tasks">
+      <h2>Todas las tareas</h2>
+      <p *ngFor="let task of tasks">
+          <button ion-button (click)="detail(task)" block clear>{{task.name}} - {{task.description}}
+            <ion-checkbox color="danger" (click)="status(task)" [checked]="task.status"></ion-checkbox></button>
+      </p>
+    </div>
 </ion-content>
